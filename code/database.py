@@ -85,6 +85,7 @@ def save_advertise_data(advertisement):
 # https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
 # https://www.geodatasource.com/distance-calculator
 def find_nearest_points(lat, lng, distance):
+    results = []
     try:
         db = pymysql.connect("localhost","darvishan","darvishan","che_khabar" )
 
@@ -96,8 +97,10 @@ def find_nearest_points(lat, lng, distance):
         sql = f"""
                 SELECT
                     id, 
+                    body,
                     latitude,
                     longitude,
+                    tags,
                     (6371 * 
                     acos(
                          cos (radians({lat})) * cos(radians(latitude)) * cos(radians(longitude) - radians({lng})) +
@@ -113,11 +116,11 @@ def find_nearest_points(lat, lng, distance):
         cursor.execute(sql)
 
         results = cursor.fetchall()
-        for row in results:
-            print(row)
 
     except Exception as e:
         print(str(e))
         
     finally:
         db.close()
+
+    return results

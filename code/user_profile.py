@@ -39,19 +39,28 @@ class UserProfile(Resource):
                   mobile = {self.user_mobile},
                   distance = {self.distance}, 
                   tags = {self.tags}""")
-    def get(self, user_id):
-        database.read(self, user_id)
 
-        # self.dump()
+    def get(self, user_id):
+        lat = request.args.get('lat')
+        lng = request.args.get('lng')
         
-        resp = jsonify(self._create_json())
-        resp.status_code = 200
+        if lat is None or lng is None:
+            database.read(self, user_id)
+    
+            resp = jsonify(self._create_json())
+            resp.status_code = 200
+        else:
+            database.read(self, user_id)
+            results = database.find_nearest_points(lat, lng, self.distance)
+
+            resp = jsonify(results)
+            resp.status_code = 200
 
         return resp
 
         # return {'employees': [i[0] for i in query.cursor.fetchall()]} # Fetches 
 
-    def post(self):
+    def post(self): 
         result = {"message": "ok"}
 
         try:

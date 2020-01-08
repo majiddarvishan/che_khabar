@@ -5,5 +5,5 @@ class MyJSONEncoder(flask.json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, decimal.Decimal):
             # Convert decimal instances to strings.
-            return int(obj)
+            return float(obj)
         return super(MyJSONEncoder, self).default(obj)
