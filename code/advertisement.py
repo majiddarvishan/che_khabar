@@ -4,7 +4,7 @@ from flask import request
 
 from collections import OrderedDict
 
-import database
+from database import Database
 
 class Advertisement(Resource):
     def __init__(self):
@@ -47,7 +47,8 @@ class Advertisement(Resource):
                   end_date = {self.end_date}, 
                   tags = {self.tags}""")
     def get(self, id):
-        database.read(self, id)
+        db = Database()
+        db.read(self, id)
 
         # self.dump()
         
@@ -81,7 +82,8 @@ class Advertisement(Resource):
                 else:
                     print(f"{k}, {v}")
                 
-            database.save_advertise_data(self)
+            db = Database()
+            db.save_advertise_data(self)
 
         except Exception as e:
             print(e)

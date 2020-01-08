@@ -4,7 +4,7 @@ from flask import request
 
 from collections import OrderedDict
 
-import database
+from database import Database
 
 class UserProfile(Resource):
     def __init__(self):
@@ -43,15 +43,15 @@ class UserProfile(Resource):
     def get(self, user_id):
         lat = request.args.get('lat')
         lng = request.args.get('lng')
-        
+
+        db = Database()
+        db.read(self, user_id)
+
         if lat is None or lng is None:
-            database.read(self, user_id)
-    
             resp = jsonify(self._create_json())
             resp.status_code = 200
         else:
-            database.read(self, user_id)
-            results = database.find_nearest_points(lat, lng, self.distance)
+            results = db.find_nearest_points(lat, lng, self.distance)
 
             resp = jsonify(results)
             resp.status_code = 200
@@ -78,7 +78,8 @@ class UserProfile(Resource):
                 else:
                     print(f"{k}, {v}")
                 
-            database.save_user_data(self)
+            db = Database()
+            db.save_user_data(self)
 
         except Exception as e:
             print(e)
