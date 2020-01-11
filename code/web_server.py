@@ -19,8 +19,8 @@ if __name__ == "__main__":
     app.config['JSON_SORT_KEYS'] = False
     api = Api(app)
 
-    # api.add_resource(user_profile.UserProfile, '/users')
-    api.add_resource(user_profile.UserProfile, '/users/<user_id>') 
+    api.add_resource(user_profile.UserProfile, '/users', endpoint='/users')
+    api.add_resource(user_profile.UserProfile, '/users/<user_id>', endpoint='/users/<user_id>')
 
     api.add_resource(advertisement.Advertisement, '/advertises')
 

@@ -77,7 +77,6 @@ class UserProfile(Resource):
                     self.tags = v
                 else:
                     print(f"{k}, {v}")
-                
             db = Database()
             db.save_user_data(self)
 

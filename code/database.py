@@ -39,9 +39,7 @@ class Database():
 
     def save_user_data(self, user_profile):
         try:
-            db = pymysql.connect("localhost","darvishan","darvishan","che_khabar" )
-
-                # prepare a cursor object using cursor() method
+            # prepare a cursor object using cursor() method
             cursor = self.connection.cursor()
 
             sql = f"""INSERT INTO user_profile(user_name, user_password, user_mobile, distance, tags) VALUES(
@@ -87,6 +85,8 @@ class Database():
     # https://gis.stackexchange.com/questions/31628/find-points-within-a-distance-using-mysql
     # https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
     # https://www.geodatasource.com/distance-calculator
+    # https://www.movable-type.co.uk/scripts/latlong-db.html
+    # https://sweetcode.io/flask-python-3-mysql/
     def find_nearest_points(self, lat, lng, distance):
         results = []
         try:
