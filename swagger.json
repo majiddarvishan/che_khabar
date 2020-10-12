@@ -1,0 +1,456 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a first REST API of Che Khabar.",
+        "version": "1.0.0",
+        "title": "Che Khabar",
+        "termsOfService": "http://chekhabar.ir/terms/",
+        "contact": {
+            "email": "apiteam@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "host": "chekhabar.ir",
+    "basePath": "/v1",
+    "tags": [
+        {
+            "name": "users",
+            "description": "Everything about users",
+            "externalDocs": {
+                "description": "Find out more",
+                "url": "http://chekhabar.ir"
+            }
+        },
+        {
+            "name": "advertise",
+            "description": "Operations about advertise",
+            "externalDocs": {
+                "description": "Find out more about our advertise",
+                "url": "http://chekhabar.ir"
+            }
+        }
+    ],
+    "schemes": [
+        "https",
+        "http"
+    ],
+    "paths": {
+        "/users/{user_id}": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "find",
+                "description": "find nearest acctions according to current user position",
+                "operationId": "find",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "lat",
+                        "in": "path",
+                        "description": "latitude of user",
+                        "required": true,
+                        "type": "integer",
+                        "format": "float"
+                    },
+                    {
+                        "name": "lng",
+                        "in": "path",
+                        "description": "longitude of user",
+                        "required": true,
+                        "type": "integer",
+                        "format": "float"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "user_auth": [
+                            "write:users",
+                            "read:users"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/users": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Add a new user",
+                "description": "",
+                "operationId": "addUser",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "user_name",
+                        "description": "user object that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    {
+                        "in": "body",
+                        "name": "password",
+                        "description": "user object that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    {
+                        "in": "body",
+                        "name": "mobile",
+                        "description": "user object that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    {
+                        "in": "body",
+                        "name": "distance",
+                        "description": "user object that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    {
+                        "in": "body",
+                        "name": "tags",
+                        "description": "user object that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "405": {
+                        "description": "Invalid input"
+                    }
+                },
+                "security": [
+                    {
+                        "user_auth": [
+                            "write:users",
+                            "read:users"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/advertises": {
+            "post": {
+                "tags": [
+                    "advertises"
+                ],
+                "summary": "Add a new advertise",
+                "description": "",
+                "operationId": "addAdvertise",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "advertiser_id",
+                        "description": "advertise object that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Advertises"
+                        }
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "advertise object that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Advertises"
+                        }
+                    },
+                    {
+                        "in": "body",
+                        "name": "latitude",
+                        "description": "advertise object that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Advertises"
+                        }
+                    },
+                    {
+                        "in": "body",
+                        "name": "longitude",
+                        "description": "advertise object that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Advertises"
+                        }
+                    },
+                    {
+                        "in": "body",
+                        "name": "start_date",
+                        "description": "advertise object that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Advertises"
+                        }
+                    },
+                    {
+                        "in": "body",
+                        "name": "end_date",
+                        "description": "advertise object that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Advertises"
+                        }
+                    },
+                    {
+                        "in": "body",
+                        "name": "tags",
+                        "description": "advertise object that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Advertises"
+                        }
+                    }
+                ],
+                "responses": {
+                    "405": {
+                        "description": "Invalid input"
+                    }
+                },
+                "security": [
+                    {
+                        "user_auth": [
+                            "write:advertises",
+                            "read:advertises"
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "securityDefinitions": {
+        "api_key": {
+            "type": "apiKey",
+            "name": "api_key",
+            "in": "header"
+        },
+        "user_auth": {
+            "type": "oauth2",
+            "authorizationUrl": "https://petstore.swagger.io/oauth/authorize",
+            "flow": "implicit",
+            "scopes": {
+                "read:pets": "read your users",
+                "write:pets": "modify users in your account"
+            }
+        }
+    },
+    "definitions": {
+        "ApiResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "Category": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "Category"
+            }
+        },
+        "Pet": {
+            "type": "object",
+            "required": [
+                "name",
+                "photoUrls"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "category": {
+                    "$ref": "#/definitions/Category"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "doggie"
+                },
+                "photoUrls": {
+                    "type": "array",
+                    "xml": {
+                        "wrapped": true
+                    },
+                    "items": {
+                        "type": "string",
+                        "xml": {
+                            "name": "photoUrl"
+                        }
+                    }
+                },
+                "tags": {
+                    "type": "array",
+                    "xml": {
+                        "wrapped": true
+                    },
+                    "items": {
+                        "xml": {
+                            "name": "tag"
+                        },
+                        "$ref": "#/definitions/Tag"
+                    }
+                },
+                "status": {
+                    "type": "string",
+                    "description": "pet status in the store",
+                    "enum": [
+                        "available",
+                        "pending",
+                        "sold"
+                    ]
+                }
+            },
+            "xml": {
+                "name": "Pet"
+            }
+        },
+        "Tag": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "Tag"
+            }
+        },
+        "Order": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "petId": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "quantity": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "shipDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Order Status",
+                    "enum": [
+                        "placed",
+                        "approved",
+                        "delivered"
+                    ]
+                },
+                "complete": {
+                    "type": "boolean"
+                }
+            },
+            "xml": {
+                "name": "Order"
+            }
+        },
+        "User": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "userStatus": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "User Status"
+                }
+            },
+            "xml": {
+                "name": "User"
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}
