@@ -87,6 +87,7 @@ class Database():
     # https://www.geodatasource.com/distance-calculator
     # https://www.movable-type.co.uk/scripts/latlong-db.html
     # https://sweetcode.io/flask-python-3-mysql/
+    # https://www.codementor.io/@adityamalviya/python-flask-mysql-connection-rxblpje73
     def find_nearest_points(self, lat, lng, distance):
         results = []
         try:

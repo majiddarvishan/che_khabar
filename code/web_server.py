@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 
 # https://www.tutorialspoint.com/python3/python_database_access.htm
+# https://flask.palletsprojects.com/en/0.12.x/config/#config
+# https://www.codementor.io/@sagaragarwal94/building-a-basic-restful-api-in-python-58k02xsiq
+# https://medium.com/the-era-of-apis/how-to-build-an-api-in-python-with-flask-rapidapi-a336af4632cd
 
 from flask import Flask, request
 from flask_restful import Resource, Api
@@ -19,6 +22,7 @@ if __name__ == "__main__":
     app.config['JSON_SORT_KEYS'] = False
     api = Api(app)
 
+    # api.add_resource(Quote, "/ai-quotes", "/ai-quotes/", "/ai-quotes/<int:id>")
     api.add_resource(user_profile.UserProfile, '/users', endpoint='/users')
     api.add_resource(user_profile.UserProfile, '/users/<user_id>', endpoint='/users/<user_id>')
 
