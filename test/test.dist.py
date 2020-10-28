@@ -1,7 +1,7 @@
 import math
 
-a= 6378.137#equitorial radius in km
-b= 6356.752#polar radius in km
+a= 35.6963403#equitorial radius in km
+b= 51.3306144#polar radius in km
 
 def Distance(lat1, lons1, lat2, lons2):
     lat1=math.radians(lat1)
@@ -20,5 +20,18 @@ def Distance(lat1, lons1, lat2, lons2):
 
     return ((x1-x2)**2+(y1-y2)**2+(z1-z2)**2)**0.5
 
-print(Distance(35.699720, 51.337974,35.700182,51.355169))
+print(Distance(35.6963403, 51.3306144,35.6944822,51.3240216))
 
+lat = 35.6963403
+lng = 51.3306144
+
+latitude=35.6944822
+longitude = 51.3240216
+d = (6371 * 
+    math.acos(
+        math.cos (math.radians(lat)) * math.cos(math.radians(latitude)) * math.cos(math.radians(longitude) - math.radians(lng)) +
+        math.sin (math.radians(lat)) * math.sin(math.radians(latitude))
+        )
+    )
+
+print(d)

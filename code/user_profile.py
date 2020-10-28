@@ -10,7 +10,7 @@ class UserProfile(Resource):
     def __init__(self):
         self.user_id = 0
         self.user_name = ""
-        self.user_password = "" 
+        self.user_last_name = "" 
         self.user_mobile = ""
         self.distance = 0
         self.tags = ""
@@ -24,18 +24,21 @@ class UserProfile(Resource):
 
         query_object = dict()
         
-        query_object["user_id"] = self.user_id
-        query_object["user_name"] = self.user_name 
-        query_object["user_mobile"] = self.user_mobile
+        # query_object["user_id"] = self.user_id
+        query_object["name"] = self.user_name 
+        query_object["last_name"] = self.user_last_name 
+        query_object["mobile"] = self.user_mobile
         query_object["distance"] = self.distance
         query_object["tags"] = self.tags 
+
+        print(query_object)
 
         return query_object
 
     def dump(self):
         print(f"""user_id = {self.user_id},
-                  user_name = {self.user_name},
-                  password = {self.user_password},
+                  name = {self.user_name},
+                  last_name = {self.user_last_name},
                   mobile = {self.user_mobile},
                   distance = {self.distance}, 
                   tags = {self.tags}""")
@@ -65,10 +68,10 @@ class UserProfile(Resource):
 
         try:
             for k, v in request.json.items():
-                if(k == "user_name"):
+                if(k == "name"):
                     self.user_name = v
-                elif(k == "password"):
-                    self.user_password = v
+                elif(k == "last_name"):
+                    self.user_last_name = v
                 elif(k == "mobile"):
                     self.user_mobile = v
                 elif(k == "distance"):

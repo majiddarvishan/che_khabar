@@ -5,7 +5,7 @@ import pymysql
 class Database():
     def __init__(self):
         # Open database connection
-        self.connection = pymysql.connect("localhost","darvishan","darvishan","che_khabar" )
+        self.connection = pymysql.connect("localhost","root","123456","che_khabar" )
         print("Database Instance created")
 
     def __del__(self): 
@@ -18,7 +18,7 @@ class Database():
             # prepare a cursor object using cursor() method
             cursor = self.connection.cursor()
 
-            sql = f"SELECT * FROM user_profile WHERE user_id = {user_id}"
+            sql = f"SELECT * FROM user_profile WHERE id = {user_id}"
                 
             # execute SQL query using execute() method.
             cursor.execute(sql)
@@ -27,7 +27,7 @@ class Database():
             for row in results:
                 user_profile.user_id = row[0]
                 user_profile.user_name = row[1]
-                user_profile.user_password = row[2]
+                user_profile.user_last_name = row[2]
                 user_profile.user_mobile = row[3]
                 user_profile.distance = row[4]
                 user_profile.tags = row[5]
@@ -42,8 +42,8 @@ class Database():
             # prepare a cursor object using cursor() method
             cursor = self.connection.cursor()
 
-            sql = f"""INSERT INTO user_profile(user_name, user_password, user_mobile, distance, tags) VALUES(
-                    '{user_profile.user_name}', '{user_profile.user_password}', 
+            sql = f"""INSERT INTO user_profile(name, last_name, mobile_no, distance, tags) VALUES(
+                    '{user_profile.user_name}', '{user_profile.user_last_name}', 
                     '{user_profile.user_mobile}', '{user_profile.distance}', '{user_profile.tags}')"""
             
             cursor.execute(sql)
@@ -59,13 +59,13 @@ class Database():
         
     def save_advertise_data(self, advertisement):
         try:
-            db = pymysql.connect("localhost","darvishan","darvishan","che_khabar" )
+            db = pymysql.connect("localhost","root","123456","che_khabar" )
 
                 # prepare a cursor object using cursor() method
             cursor = self.connection.cursor()
 
-            sql = f"""INSERT INTO advertisements(advertiser_id, body, latitude, longitude, start_date, end_date, tags) VALUES(
-                    '{advertisement.advertiser_id}', '{advertisement.body}', 
+            sql = f"""INSERT INTO advertisements(user_id, body, latitude, longitude, start_date, end_date, tags) VALUES(
+                    '{advertisement.user_id}', '{advertisement.body}', 
                     '{advertisement.latitude}', '{advertisement.longitude}', 
                     '{advertisement.start_date}', '{advertisement.end_date}', 
                     '{advertisement.tags}')"""
@@ -91,7 +91,7 @@ class Database():
     def find_nearest_points(self, lat, lng, distance):
         results = []
         try:
-            db = pymysql.connect("localhost","darvishan","darvishan","che_khabar" )
+            db = pymysql.connect("localhost","root","123456","che_khabar" )
 
                 # prepare a cursor object using cursor() method
             cursor = self.connection.cursor()
@@ -100,23 +100,22 @@ class Database():
             # 3959 : earth's mean radius, miles
             sql = f"""
                     SELECT
-                        id, 
                         body,
                         latitude,
                         longitude,
                         tags,
-                        (6371 * 
+                        Convert((6371 * 
                         acos(
                             cos (radians({lat})) * cos(radians(latitude)) * cos(radians(longitude) - radians({lng})) +
                             sin (radians({lat})) * sin(radians(latitude))
                             )
-                        ) AS distance
+                        * 100
+                        ), UNSIGNED ) AS distance
                     FROM advertisements
                     HAVING distance < {distance} AND latitude != {lat} AND longitude != {lng}
                     ORDER BY distance
                     LIMIT 0 , 20;
                     """
-            
             cursor.execute(sql)
 
             results = cursor.fetchall()

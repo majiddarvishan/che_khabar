@@ -5,8 +5,8 @@ import pymysql
 
 # Create a connection object
 dbServerName    = "127.0.0.1"
-dbUser          = "darvishan"
-dbPassword      = "darvishan"
+dbUser          = "root"
+dbPassword      = "123456"
 dbName          = "che_khabar"
 charSet         = "utf8mb4"
 

@@ -1,0 +1,34 @@
+# docker run -d --rm --name some-mysql  -v "$PWD/data":/var/lib/mysql  -p3306:3306 -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:8.0.22 -udarvishan -pdarvishan --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+# docker run -d --rm --name some-mysql  -v "$PWD/data":/var/lib/mysql  -p3306:3306 -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:8.0.22 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+# docker run -d --rm --name=mysql1 -v "$PWD/data":/var/lib/mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456  mysql:8.0.22 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+version: '3.1'
+
+services:
+
+  db:
+    image: mysql:8.0.22
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_USER: darvishan
+      MYSQL_PASSWORD: darvishan
+    volumes:
+      - ./data:/var/lib/mysql
+
+    ports:
+      - 3306:3306
+
+    network_mode: "bridge"
+
+  # adminer:
+  #   image: adminer:4.7.7
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
+  # network_mode: "bridge"
+
+# networks:
+#   default:
+#     external:
+#       name: bridge

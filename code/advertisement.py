@@ -9,12 +9,12 @@ from database import Database
 class Advertisement(Resource):
     def __init__(self):
         self.id = 0
-        self.advertiser_id = 0
+        self.user_id = 0
         self.body = ""
         self.latitude = 0.0
         self.longitude = 0.0
-        self.start_date = 0
-        self.end_date = 0
+        self.start_date = ""
+        self.end_date = ""
         self.tags = ""
 
     def _create_json(self):
@@ -26,8 +26,8 @@ class Advertisement(Resource):
 
         query_object = dict()
         
-        query_object["id"] = self.id
-        query_object["advertiser_id"] = self.advertiser_id 
+        # query_object["id"] = self.id
+        query_object["user_id"] = self.user_id 
         query_object["body"] = self.body
         query_object["latitude"] = self.latitude
         query_object["longitude"] = self.longitude
@@ -39,7 +39,7 @@ class Advertisement(Resource):
 
     def dump(self):
         print(f"""id = {self.id},
-                  advertiser_id = {self.advertiser_id},
+                  user_id = {self.user_id},
                   body = {self.body},
                   latitude = {self.latitude},
                   longitude = {self.longitude}, 
@@ -65,8 +65,8 @@ class Advertisement(Resource):
 
         try:
             for k, v in request.json.items():
-                if(k == "advertiser_id"):
-                    self.advertiser_id = v
+                if(k == "user_id"):
+                    self.user_id = v
                 elif(k == "body"):
                     self.body = v
                 elif(k == "latitude"):

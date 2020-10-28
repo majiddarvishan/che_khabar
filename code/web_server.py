@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!python
 
 # https://www.tutorialspoint.com/python3/python_database_access.htm
 # https://flask.palletsprojects.com/en/0.12.x/config/#config
@@ -32,4 +32,4 @@ if __name__ == "__main__":
     # 35.699724, 51.338048
     # database.find_nearest_points(35.699720, 51.337974, 100)
 
-    app.run(host='172.23.10.20', port='5002')
+    app.run(host='192.168.1.200', port='5002')
