@@ -1,22 +1,37 @@
 import pymysql
 
 # https://itnext.io/sqlalchemy-orm-connecting-to-postgresql-from-scratch-create-fetch-update-and-delete-a86bc81333dc
+# https://www.tutorialspoint.com/python3/python_database_access.htm
 
 class Database():
     def __init__(self):
+        self._connection = None
+
+        connection_config_dict = {
+            'user': 'root',
+            'password': '123456',
+            'host': '127.0.0.1',
+            'database': 'che_khabar',
+            'autocommit': True
+            }
+
         # Open database connection
-        self.connection = pymysql.connect("localhost","root","123456","che_khabar" )
-        print("Database Instance created")
+        try:
+            self._connection = pymysql.connect(**connection_config_dict)
+            print("Database Instance created")
+        except Exception as e:
+            print("Error while connecting to MySQL", e)
 
     def __del__(self): 
         print('Database destructor called.') 
-        self.connection.close()
+        if(self._connection.open):
+            self._connection.close()
 
 
     def read(self, user_profile, user_id):
         try:
             # prepare a cursor object using cursor() method
-            cursor = self.connection.cursor()
+            cursor = self._connection.cursor()
 
             sql = f"SELECT * FROM user_profile WHERE id = {user_id}"
                 
@@ -24,23 +39,34 @@ class Database():
             cursor.execute(sql)
 
             results = cursor.fetchall()
+
+            # column headers
+            # desc = cursor.description
+            # print(f'{desc[0][0]:<8} {desc[1][0]:<15} {desc[2][0]:>10}')
+
+            # affected rows
+            # print(f'The query affected {cur.rowcount} rows')
+
             for row in results:
                 user_profile.user_id = row[0]
                 user_profile.user_name = row[1]
                 user_profile.user_last_name = row[2]
                 user_profile.user_mobile = row[3]
                 user_profile.distance = row[4]
-                user_profile.tags = row[5]
-                
-            # disconnect from server
-            
+                user_profile.tags = row[5]               
+           
         except Exception as e:
             print(str(e))
+        finally:
+            if(self._connection.open):
+                cursor.close()
+                print("MySQL connection is closed")
+
 
     def save_user_data(self, user_profile):
         try:
             # prepare a cursor object using cursor() method
-            cursor = self.connection.cursor()
+            cursor = self._connection.cursor()
 
             sql = f"""INSERT INTO user_profile(name, last_name, mobile_no, distance, tags) VALUES(
                     '{user_profile.user_name}', '{user_profile.user_last_name}', 
@@ -48,7 +74,7 @@ class Database():
             
             cursor.execute(sql)
 
-            self.connection.commit()
+            self._connection.commit()
 
             # Get the primary key value of the last inserted row
             print("Primary key id of the last inserted row:")
@@ -59,10 +85,8 @@ class Database():
         
     def save_advertise_data(self, advertisement):
         try:
-            db = pymysql.connect("localhost","root","123456","che_khabar" )
-
-                # prepare a cursor object using cursor() method
-            cursor = self.connection.cursor()
+            # prepare a cursor object using cursor() method
+            cursor = self._connection.cursor()
 
             sql = f"""INSERT INTO advertisements(user_id, body, latitude, longitude, start_date, end_date, tags) VALUES(
                     '{advertisement.user_id}', '{advertisement.body}', 
@@ -72,7 +96,7 @@ class Database():
             
             cursor.execute(sql)
 
-            self.connection.commit()
+            self._connection.commit()
 
             # Get the primary key value of the last inserted row
             print("Primary key id of the last inserted row:")
@@ -91,10 +115,8 @@ class Database():
     def find_nearest_points(self, lat, lng, distance):
         results = []
         try:
-            db = pymysql.connect("localhost","root","123456","che_khabar" )
-
-                # prepare a cursor object using cursor() method
-            cursor = self.connection.cursor()
+            # prepare a cursor object using cursor() method
+            cursor = self._connection.cursor()
 
             # 6371 : earth's mean radius, km
             # 3959 : earth's mean radius, miles

@@ -31,8 +31,6 @@ class UserProfile(Resource):
         query_object["distance"] = self.distance
         query_object["tags"] = self.tags 
 
-        print(query_object)
-
         return query_object
 
     def dump(self):
