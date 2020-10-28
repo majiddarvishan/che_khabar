@@ -27,6 +27,7 @@ if __name__ == "__main__":
     api.add_resource(user_profile.UserProfile, '/users/<user_id>', endpoint='/users/<user_id>')
 
     api.add_resource(advertisement.Advertisement, '/advertises')
+    api.add_resource(advertisement.Advertisement, '/advertises/<advertise_id>', endpoint='/advertises/<advertise_id>')
 
     # 35.6997223, 51.3380470
     # 35.699724, 51.338048

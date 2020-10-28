@@ -46,9 +46,9 @@ class Advertisement(Resource):
                   start_date = {self.start_date}, 
                   end_date = {self.end_date}, 
                   tags = {self.tags}""")
-    def get(self, id):
+    def get(self, advertise_id):
         db = Database()
-        db.read(self, id)
+        db.read_advertise_info(self, advertise_id)
 
         # self.dump()
         
@@ -83,7 +83,7 @@ class Advertisement(Resource):
                     print(f"{k}, {v}")
                 
             db = Database()
-            db.save_advertise_data(self)
+            res, text = db.save_advertise_data(self)
 
         except Exception as e:
             print(e)

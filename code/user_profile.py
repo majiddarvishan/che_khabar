@@ -11,6 +11,7 @@ class UserProfile(Resource):
         self.user_id = 0
         self.user_name = ""
         self.user_last_name = "" 
+        self.user_email = "" 
         self.user_mobile = ""
         self.distance = 0
         self.tags = ""
@@ -27,6 +28,7 @@ class UserProfile(Resource):
         # query_object["user_id"] = self.user_id
         query_object["name"] = self.user_name 
         query_object["last_name"] = self.user_last_name 
+        query_object["email"] = self.user_email 
         query_object["mobile"] = self.user_mobile
         query_object["distance"] = self.distance
         query_object["tags"] = self.tags 
@@ -37,6 +39,7 @@ class UserProfile(Resource):
         print(f"""user_id = {self.user_id},
                   name = {self.user_name},
                   last_name = {self.user_last_name},
+                  email = {self.user_email},
                   mobile = {self.user_mobile},
                   distance = {self.distance}, 
                   tags = {self.tags}""")
@@ -46,7 +49,7 @@ class UserProfile(Resource):
         lng = request.args.get('lng')
 
         db = Database()
-        db.read(self, user_id)
+        db.read_user_info(self, user_id)
 
         if lat is None or lng is None:
             resp = jsonify(self._create_json())
@@ -70,6 +73,8 @@ class UserProfile(Resource):
                     self.user_name = v
                 elif(k == "last_name"):
                     self.user_last_name = v
+                elif(k == "email"):
+                    self.user_email = v
                 elif(k == "mobile"):
                     self.user_mobile = v
                 elif(k == "distance"):
@@ -79,7 +84,8 @@ class UserProfile(Resource):
                 else:
                     print(f"{k}, {v}")
             db = Database()
-            db.save_user_data(self)
+            res, text = db.save_user_data(self)
+            result = {"message": str(text)}
 
         except Exception as e:
             print(e)
