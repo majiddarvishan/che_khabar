@@ -14,6 +14,8 @@ def create_app():
 
     # Create database tables for our data models
     with app.app_context():
+        from . import routes  # Import routes
+        
         db.create_all() 
 
     # app.config['JSON_SORT_KEYS'] = False

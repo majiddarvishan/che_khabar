@@ -1,7 +1,6 @@
 """Data models."""
 from . import db
 
-
 from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, func
 from sqlalchemy.orm import relationship, backref
 
@@ -47,36 +46,36 @@ class User(db.Model):
 
         return query_object
 
-# class Advertisement(db.Model):
-#     """Data model for Advertisement."""
+class Advertisement(db.Model):
+    """Data model for Advertisement."""
 
-#     __tablename__ = "advertisements"
-#     id = db.Column(db.BigInteger, primary_key=True)
-#     user_id = db.Column(db.BigInteger, ForeignKey('users.id'))
-#     description = db.Column(db.UnicodeText, index=False, nullable=False)
-#     latitude = db.Column(db.FLOAT, index=False, nullable=False)
-#     longitude = db.Column(db.FLOAT, index=False, nullable=False)
-#     start_time = db.Column(db.DateTime, default=func.now(), index=False, unique=False, nullable=True)
-#     end_time = db.Column(db.DateTime, index=False, unique=False, nullable=True)
-#     tags = db.Column(db.Text, index=False, unique=False, nullable=True)
+    __tablename__ = "advertisements"
+    id = db.Column(db.BigInteger, primary_key=True)
+    user_id = db.Column(db.BigInteger, ForeignKey('users.id'))
+    description = db.Column(db.UnicodeText, index=False, nullable=False)
+    latitude = db.Column(db.FLOAT, index=False, nullable=False)
+    longitude = db.Column(db.FLOAT, index=False, nullable=False)
+    start_time = db.Column(db.DateTime, default=func.now(), index=False, unique=False, nullable=True)
+    end_time = db.Column(db.DateTime, index=False, unique=False, nullable=True)
+    tags = db.Column(db.Text, index=False, unique=False, nullable=True)
 
-#      # Use cascade='delete,all' to propagate the deletion of a Department onto its Employees
-#     users = relationship(
-#         User,
-#         backref=backref('users',
-#                          uselist=True,
-#                          cascade='delete,all'))
+     # Use cascade='delete,all' to propagate the deletion of a Department onto its Employees
+    users = relationship(
+        User,
+        backref=backref('users',
+                         uselist=True,
+                         cascade='delete,all'))
  
 
-#     def __repr__(self):
-#         return f"""id = {self.id},
-#                    user_id = {self.user_id},
-#                    description = {self.description},
-#                    latitude = {self.latitude},
-#                    longitude = {self.longitude},
-#                    start_time = {self.start_time},
-#                    end_time = {self.end_time}
-#                 """
+    def __repr__(self):
+        return f"""id = {self.id},
+                   user_id = {self.user_id},
+                   description = {self.description},
+                   latitude = {self.latitude},
+                   longitude = {self.longitude},
+                   start_time = {self.start_time},
+                   end_time = {self.end_time}
+                """
 
 #     def create_json(self):
 #         # query_object = OrderedDict([("user_id",  self.user_id),
