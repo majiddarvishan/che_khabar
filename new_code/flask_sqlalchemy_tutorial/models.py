@@ -14,8 +14,8 @@ class User(db.Model):
     email = db.Column(db.String(80), index=True, unique=True, nullable=False)
     mobile = db.Column(db.Numeric(20), index=True, unique=True, nullable=False)
     created = db.Column(db.DateTime, index=False, unique=False, nullable=False)
-    bio = db.Column(db.UnicodeText, index=False, unique=False, nullable=True)
     distance = db.Column(db.SmallInteger, index=False, unique=False, nullable=True)
+    bio = db.Column(db.UnicodeText, index=False, unique=False, nullable=True)
     tags = db.Column(db.Text, index=False, unique=False, nullable=True)
 
     def __repr__(self):
@@ -51,7 +51,7 @@ class Advertisement(db.Model):
 
     __tablename__ = "advertisements"
     id = db.Column(db.BigInteger, primary_key=True)
-    user_id = db.Column(db.BigInteger, ForeignKey('users.id'))
+    user_id = db.Column(db.BigInteger, ForeignKey('users.id'), nullable=False)
     description = db.Column(db.UnicodeText, index=False, nullable=False)
     latitude = db.Column(db.FLOAT, index=False, nullable=False)
     longitude = db.Column(db.FLOAT, index=False, nullable=False)

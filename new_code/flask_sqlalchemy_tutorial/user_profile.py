@@ -7,24 +7,15 @@ from flask import make_response, redirect, render_template, request, url_for
 from flask import Flask, request, Response, jsonify
 from flask_restful import Api, Resource, reqparse
 from flasgger import Swagger, swag_from
+from datetime import datetime
 
 # from flask_jsonpify import jsonify
 
 from collections import OrderedDict
 
-
 from .models import User, db
 
 class UserProfile(Resource):
-  def __init__(self):
-        self.user_id = 0
-        self.user_name = ""
-        self.user_last_name = "" 
-        self.user_email = "" 
-        self.user_mobile = ""
-        self.distance = 0
-        self.tags = ""
-
   def get(self, user_id):
     """
     post endpoint
@@ -111,30 +102,46 @@ class UserProfile(Resource):
     return resp  
 
   def post(self): 
-    result = {"message": "ok"}
+    for k, v in request.json.items():
+        if(k == "first_name"):
+            first_name = v
+        elif(k == "last_name"):
+            last_name = v
+        elif(k == "email"):
+            email = v
+        elif(k == "mobile"):
+            mobile = v
+        elif(k == "distance"):
+            distance = v
+        elif(k == "tags"):
+            tags = v
+        else:
+            print(f"{k}, {v}")
 
-    try:
-        for k, v in request.json.items():
-            if(k == "name"):
-                self.user_name = v
-            elif(k == "last_name"):
-                self.user_last_name = v
-            elif(k == "email"):
-                self.user_email = v
-            elif(k == "mobile"):
-                self.user_mobile = v
-            elif(k == "distance"):
-                self.distance = v
-            elif(k == "tags"):
-                self.tags = v
-            else:
-                print(f"{k}, {v}")
-        db = Database()
-        res, text = db.save_user_data(self)
-        result = {"message": str(text)}
+    if email:
+      existing_user = User.query.filter(
+          User.email == email
+      ).first()
+      if existing_user:
+        result = jsonify("User with this email is already available") 
+        result.status_code = 400
+        return result
+      else:
+        new_user = User(firstname=first_name,
+                        lastname=last_name,
+                        email=email,
+                        mobile=mobile,
+                        created=datetime.now(),
+                        distance=distance,
+                        bio="In West Philadelphia born and raised, \
+                        on the playground is where I spent most of my days",
+                        tags=tags
+                        )
+        db.session.add(new_user) 
+        db.session.commit()  
+        
+        return make_response(f"user profile successfully created!")
+    else:
+      return make_response(f"missing some parameters!")
 
-    except Exception as e:
-        print(e)
-        result = {"message": str(e)}
-
-    return jsonify(result)
+    return make_response(f"missing some parameters!")
