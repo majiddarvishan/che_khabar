@@ -6,6 +6,8 @@ import requests
 from flask import Flask, request, Response, jsonify
 from flask_restful import Api, Resource, reqparse
 from flasgger import Swagger, swag_from
+from flask_sqlalchemy import SQLAlchemy
+
 
 # from flask_jsonpify import jsonify
 
@@ -13,7 +15,9 @@ from collections import OrderedDict
 
 from database import Database
 
-class UserProfile(Resource):
+db = SQLAlchemy(app)
+
+class UserProfile2(Resource):
   def __init__(self):
         self.user_id = 0
         self.user_name = ""

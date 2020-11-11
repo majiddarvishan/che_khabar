@@ -20,6 +20,7 @@ import config
 import requests
 from flask import Flask, request, Response, jsonify
 from flask_restful import Api, Resource, reqparse
+from flask_sqlalchemy import SQLAlchemy
 
 import my_json_encoder
 
@@ -63,6 +64,10 @@ if __name__ == "__main__":
         'uiversion': 3,
         "specs_route": "/swagger/"
     }
+
+    # https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/
+    # https://hackersandslackers.com/flask-sqlalchemy-database-models/
+    app.config ['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@server/db'
 
     app.json_encoder = my_json_encoder.MyJSONEncoder
 

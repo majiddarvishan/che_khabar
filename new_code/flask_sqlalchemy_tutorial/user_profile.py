@@ -2,7 +2,8 @@ import json,os
 import logging
 import sys
 import config
-import requests
+# import requests
+from flask import make_response, redirect, render_template, request, url_for
 from flask import Flask, request, Response, jsonify
 from flask_restful import Api, Resource, reqparse
 from flasgger import Swagger, swag_from
@@ -11,7 +12,8 @@ from flasgger import Swagger, swag_from
 
 from collections import OrderedDict
 
-from database import Database
+
+from .models import User, db
 
 class UserProfile(Resource):
   def __init__(self):
@@ -22,34 +24,6 @@ class UserProfile(Resource):
         self.user_mobile = ""
         self.distance = 0
         self.tags = ""
-
-  def _create_json(self):
-      # query_object = OrderedDict([("user_id",  self.user_id),
-      #                     ("user_name",  self.user_name ),
-      #                     ("user_mobile",  self.user_mobile),
-      #                     ("distance",  self.distance),
-      #                     ("tags",  self.tags )])
-
-      query_object = dict()
-      
-      # query_object["user_id"] = self.user_id
-      query_object["name"] = self.user_name 
-      query_object["last_name"] = self.user_last_name 
-      query_object["email"] = self.user_email 
-      query_object["mobile"] = self.user_mobile
-      query_object["distance"] = self.distance
-      query_object["tags"] = self.tags 
-
-      return query_object
-
-  def dump(self):
-      print(f"""user_id = {self.user_id},
-                name = {self.user_name},
-                last_name = {self.user_last_name},
-                email = {self.user_email},
-                mobile = {self.user_mobile},
-                distance = {self.distance}, 
-                tags = {self.tags}""")
 
   def get(self, user_id):
     """
@@ -86,28 +60,55 @@ class UserProfile(Resource):
               type: integer
               description: The sum of number              
     """
+    email = request.args.get("email")
     lat = request.args.get('lat')
     lng = request.args.get('lng')
 
-    db = Database()
-    db.read_user_info(self, user_id)
+    if email:
+        existing_user = User.query.filter(
+            User.email == email
+        ).first()
+        if existing_user:
+          if lat is None or lng is None:
+            resp = jsonify(existing_user.create_json())
+            resp.status_code = 200
+          else:
+            sql = f"""
+                SELECT
+                    body,
+                    latitude,
+                    longitude,
+                    tags,
+                    Convert((6371 *
+                    acos(
+                        cos (radians({lat})) * cos(radians(latitude)) * cos(radians(longitude) - radians({lng})) +
+                        sin (radians({lat})) * sin(radians(latitude))
+                        )
+                    * 100
+                    ), UNSIGNED ) AS distance
+                FROM advertisements
+                HAVING distance < {existing_user.distance} AND latitude != {lat} AND longitude != {lng}
+                ORDER BY distance
+                LIMIT 0 , 20;
+                """
+            result = db.session.execute(sql)
+            # places = [row for row in result]
+            # print(places)
+            # print(type(places))
+            # print(type(places[0]))
 
-    if lat is None or lng is None:
-        resp = jsonify(self._create_json())
-        resp.status_code = 200
+            from collections import namedtuple
+
+            Record = namedtuple('Record', result.keys())
+            records = [Record(*r)._asdict() for r in result.fetchall()]
+
+            resp = jsonify(records)
+            resp.status_code = 200
     else:
-        results = db.find_nearest_points(lat, lng, self.distance)
+      resp = jsonify("please input email")
+      resp.status_code = 400
 
-        resp = jsonify(results)
-        resp.status_code = 200
-
-    return resp
-    
-    # return jsonify({
-    #           "sum": numsum,
-    #           "product": prod,
-    #           "division": div
-    #       })
+    return resp  
 
   def post(self): 
     result = {"message": "ok"}
