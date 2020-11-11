@@ -77,22 +77,17 @@ class Advertisement(db.Model):
                    end_time = {self.end_time}
                 """
 
-#     def create_json(self):
-#         # query_object = OrderedDict([("user_id",  self.user_id),
-#         #                     ("user_name",  self.user_name ),
-#         #                     ("user_mobile",  self.user_mobile),
-#         #                     ("distance",  self.distance),
-#         #                     ("tags",  self.tags )])
-
-#         query_object = dict()
+    def create_json(self):
+        query_object = dict()
         
-#         # query_object["user_id"] = self.user_id
-#         query_object["first_name"] = self.firstname
-#         query_object["last_name"] = self.lastname 
-#         query_object["email"] = self.email 
-#         query_object["mobile"] = self.mobile
-#         query_object["distance"] = self.distance
-#         query_object["tags"] = self.tags 
+        query_object["id"] = self.id
+        query_object["user_id"] = self.user_id
+        query_object["description"] = self.description
+        query_object["latitude"] = self.latitude
+        query_object["longitude"] = self.longitude
+        query_object["start_time"] = self.start_time
+        query_object["end_time"] = self.end_time
+        query_object["tags"] = self.tags
 
-#         return query_object
+        return query_object
 

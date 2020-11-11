@@ -27,8 +27,9 @@ def create_app():
     api.add_resource(user_profile.UserProfile, '/users', endpoint='/users')
     api.add_resource(user_profile.UserProfile, '/users/<user_id>', endpoint='/users/<user_id>')
 
-    # api.add_resource(advertisement.Advertisement, '/advertises')
-    # api.add_resource(advertisement.Advertisement, '/advertises/<advertise_id>', endpoint='/advertises/<advertise_id>')
+    from . import advertisement_profile
+    api.add_resource(advertisement_profile.AdvertisementProfile, '/advertisements', endpoint='/advertisements')
+    api.add_resource(advertisement_profile.AdvertisementProfile, '/advertisements/<advertisement_id>', endpoint='/advertisements/<advertisement_id>')
 
     # db.create_all()  # Create database tables for our data models
 
