@@ -1,5 +1,5 @@
 """App entry point."""
-from flask_sqlalchemy_tutorial import create_app
+from flask_app import create_app
 
 app = create_app()
 

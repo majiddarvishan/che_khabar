@@ -95,6 +95,9 @@ class UserProfile(Resource):
 
             resp = jsonify(records)
             resp.status_code = 200
+        else:
+          resp = jsonify("user with this email is not available")
+          resp.status_code = 400
     else:
       resp = jsonify("please input email")
       resp.status_code = 400
