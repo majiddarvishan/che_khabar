@@ -12,3 +12,4 @@ werkzeug==1.0.1
 flask_restful
 config
 flasgger
+flask_jsonpify
