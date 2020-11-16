@@ -24,12 +24,16 @@ def create_app():
     # api.add_resource(Quote, "/ai-quotes", "/ai-quotes/", "/ai-quotes/<int:id>")
 
     from . import user_profile
-    api.add_resource(user_profile.UserProfile, '/users', endpoint='/users')
-    api.add_resource(user_profile.UserProfile, '/users/<user_id>', endpoint='/users/<user_id>')
+    api.add_resource(user_profile.UserProfile, '/users', 
+                                               endpoint='/users', 
+                                               strict_slashes=False)
+    # api.add_resource(user_profile.UserProfile, '/users/<user_id>', endpoint='/users/<user_id>')
 
     from . import advertisement_profile
-    api.add_resource(advertisement_profile.AdvertisementProfile, '/advertisements', endpoint='/advertisements')
-    api.add_resource(advertisement_profile.AdvertisementProfile, '/advertisements/<advertisement_id>', endpoint='/advertisements/<advertisement_id>')
+    api.add_resource(advertisement_profile.AdvertisementProfile, '/advertisements', 
+                                                                 endpoint='/advertisements', 
+                                                                 strict_slashes=False)
+    # api.add_resource(advertisement_profile.AdvertisementProfile, '/advertisements/<advertisement_id>', endpoint='/advertisements/<advertisement_id>')
 
     # db.create_all()  # Create database tables for our data models
 

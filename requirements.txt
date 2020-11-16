@@ -13,4 +13,5 @@ flask_restful
 config
 flasgger
 flask_jsonpify
-
+Flask-MySQLdb
+py-dotenv

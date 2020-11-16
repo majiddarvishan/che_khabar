@@ -2,34 +2,38 @@ from flask_restful import Resource, Api
 from flask_jsonpify import jsonify
 from flask import request, make_response
 
-from .models import Advertisement, db
+from .models import Advertisement, User, db
 
 class AdvertisementProfile(Resource):
-    def get(self, advertisement_id = None):
-        if(advertisement_id):
-            adv = Advertisement.query.filter(
-                Advertisement.id == advertisement_id
+    def get(self):
+        email = request.args.get("email")
+        user = User.query.filter(
+                User.email == email
             ).first()
 
-            resp = jsonify(adv.create_json())
-            resp.status_code = 200
-        else:
-            advs = Advertisement.query.all()
+        if(user):
+            advs = Advertisement.query.filter(
+                Advertisement.user_id == user.id
+            ).all()
+
             l = list()
             for adv in advs:
                 l.append(adv.create_json())
 
-            resp = jsonify(l)
-            resp.status_code = 200
+            result = jsonify(l)
 
-        return resp
+        else:
+            result = jsonify("User with this email is not available") 
+            result.status_code = 400
+        
+        return result
 
     def post(self):
         import time
 
         for k, v in request.json.items():
-            if(k == "user_id"):
-                user_id = v
+            if(k == "email"):
+                email = v
             elif(k == "description"):
                 description = v
             elif(k == "latitude"):
@@ -45,15 +49,25 @@ class AdvertisementProfile(Resource):
             else:
                 print(f"{k}, {v}")
 
-        new_adv = Advertisement(user_id=user_id,
-                    description=description,
-                    latitude=latitude,
-                    longitude=longitude,
-                    start_time=start_time,
-                    end_time=end_time,
-                    tags=tags
-                    )
-        db.session.add(new_adv)
-        db.session.commit()
+        user = User.query.filter(
+                User.email == email
+            ).first()
 
-        return make_response(f"advertisement successfully created!")
+        if(user):
+            new_adv = Advertisement(user_id=user.id,
+                        description=description,
+                        latitude=latitude,
+                        longitude=longitude,
+                        start_time=start_time,
+                        end_time=end_time,
+                        tags=tags
+                        )
+            db.session.add(new_adv)
+            db.session.commit()
+
+            result = jsonify("advertisement successfully created") 
+        else:
+            result = jsonify("User with this email is not available") 
+            result.status_code = 400
+
+        return result

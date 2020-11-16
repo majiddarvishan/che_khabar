@@ -16,7 +16,7 @@ from collections import OrderedDict
 from .models import User, db
 
 class UserProfile(Resource):
-  def get(self, user_id):
+  def get(self):
     """
     post endpoint
     ---      
@@ -66,7 +66,7 @@ class UserProfile(Resource):
           else:
             sql = f"""
                 SELECT
-                    body,
+                    description,
                     latitude,
                     longitude,
                     tags,
