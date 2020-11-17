@@ -5,7 +5,7 @@ from flask import current_app as app
 from flask import make_response, redirect, render_template, request, url_for
 from flask_restful import Resource, Api
 
-from .models import User, db
+# from models import User, db
 
 # @app.route("/", methods=["GET"])
 # def user_records():

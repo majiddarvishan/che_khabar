@@ -13,7 +13,8 @@ from datetime import datetime
 
 from collections import OrderedDict
 
-from .models import User, db
+from .models import user, advertisement
+from flask_app import db
 
 class UserProfile(Resource):
   def get(self):
@@ -56,8 +57,8 @@ class UserProfile(Resource):
     lng = request.args.get('lng')
 
     if email:
-        existing_user = User.query.filter(
-            User.email == email
+        existing_user = user.User.query.filter(
+            user.User.email == email
         ).first()
         if existing_user:
           if lat is None or lng is None:
@@ -122,15 +123,15 @@ class UserProfile(Resource):
             print(f"{k}, {v}")
 
     if email:
-      existing_user = User.query.filter(
-          User.email == email
+      existing_user = user.User.query.filter(
+          user.User.email == email
       ).first()
       if existing_user:
-        result = jsonify("User with this email is already available") 
+        result = jsonify("User with this email is already exist") 
         result.status_code = 400
         return result
       else:
-        new_user = User(firstname=first_name,
+        new_user = user.User(firstname=first_name,
                         lastname=last_name,
                         email=email,
                         mobile=mobile,
@@ -143,8 +144,9 @@ class UserProfile(Resource):
         db.session.add(new_user) 
         db.session.commit()  
         
-        return make_response(f"user profile successfully created!")
+        return jsonify("user profile successfully created!") 
     else:
-      return make_response(f"missing some parameters!")
+      return jsonify("missing some parameters!") 
 
-    return make_response(f"missing some parameters!")
+    return jsonify("missing some parameters!") 
+    # return make_response(f"missing some parameters!")

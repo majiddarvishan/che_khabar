@@ -2,18 +2,19 @@ from flask_restful import Resource, Api
 from flask_jsonpify import jsonify
 from flask import request, make_response
 
-from .models import Advertisement, User, db
+from .models import user, advertisement
+from flask_app import db
 
 class AdvertisementProfile(Resource):
     def get(self):
         email = request.args.get("email")
-        user = User.query.filter(
-                User.email == email
+        usr = user.User.query.filter(
+                user.User.email == email
             ).first()
 
-        if(user):
-            advs = Advertisement.query.filter(
-                Advertisement.user_id == user.id
+        if(usr):
+            advs = advertisement.Advertisement.query.filter(
+                advertisement.Advertisement.user_id == usr.id
             ).all()
 
             l = list()
@@ -49,12 +50,12 @@ class AdvertisementProfile(Resource):
             else:
                 print(f"{k}, {v}")
 
-        user = User.query.filter(
-                User.email == email
+        usr = user.User.query.filter(
+                user.User.email == email
             ).first()
 
-        if(user):
-            new_adv = Advertisement(user_id=user.id,
+        if(usr):
+            new_adv = advertisement.Advertisement(user_id=usr.id,
                         description=description,
                         latitude=latitude,
                         longitude=longitude,
