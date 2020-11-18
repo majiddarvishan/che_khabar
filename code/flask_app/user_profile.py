@@ -19,11 +19,16 @@ from flask_app import db
 class UserProfile(Resource):
   def get(self):
     """
-    post endpoint
+    get endpoint
     ---      
     tags:
-      - Flast Restful APIs
+      - user
     parameters:
+      - name: email
+        in: query
+        type: string
+        required: true
+        description: email of user
       - name: lat
         in: query
         type: float
@@ -35,10 +40,10 @@ class UserProfile(Resource):
         required: false
         description: current longitute of user
     responses:
-      500:
-        description: Error The number is not float!
+      400:
+        description: missing some parameters
       200:
-        description: Number statistics
+        description: if latitude and longitude don't available, return user's information. otherwise return places according to user's location
         schema:
           id: stats
           properties:
