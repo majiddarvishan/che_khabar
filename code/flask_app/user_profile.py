@@ -17,7 +17,7 @@ from .models import user, advertisement
 from flask_app import db
 
 class UserProfile(Resource):
-  def get(self):
+  def get(self, user_email : str):
     """
     get endpoint
     ---      
@@ -29,21 +29,11 @@ class UserProfile(Resource):
         type: string
         required: true
         description: email of user
-      - name: lat
-        in: query
-        type: float
-        required: false
-        description: current latitude of user
-      - name: lng
-        in: query
-        type: float
-        required: false
-        description: current longitute of user
     responses:
       400:
         description: missing some parameters
       200:
-        description: if latitude and longitude don't available, return user's information. otherwise return places according to user's location
+        description: return user's information
         schema:
           id: stats
           properties:
@@ -57,49 +47,12 @@ class UserProfile(Resource):
               type: integer
               description: The sum of number              
     """
-    email = request.args.get("email")
-    lat = request.args.get('lat')
-    lng = request.args.get('lng')
-
-    if email:
+    if user_email:
         existing_user = user.User.query.filter(
-            user.User.email == email
+            user.User.email == user_email
         ).first()
         if existing_user:
-          if lat is None or lng is None:
             resp = jsonify(existing_user.create_json())
-            resp.status_code = 200
-          else:
-            sql = f"""
-                SELECT
-                    description,
-                    latitude,
-                    longitude,
-                    tags,
-                    Convert((6371 *
-                    acos(
-                        cos (radians({lat})) * cos(radians(latitude)) * cos(radians(longitude) - radians({lng})) +
-                        sin (radians({lat})) * sin(radians(latitude))
-                        )
-                    * 100
-                    ), UNSIGNED ) AS distance
-                FROM advertisements
-                HAVING distance < {existing_user.distance} AND latitude != {lat} AND longitude != {lng}
-                ORDER BY distance
-                LIMIT 0 , 20;
-                """
-            result = db.session.execute(sql)
-            # places = [row for row in result]
-            # print(places)
-            # print(type(places))
-            # print(type(places[0]))
-
-            from collections import namedtuple
-
-            Record = namedtuple('Record', result.keys())
-            records = [Record(*r)._asdict() for r in result.fetchall()]
-
-            resp = jsonify(records)
             resp.status_code = 200
         else:
           resp = jsonify("user with this email is not available")

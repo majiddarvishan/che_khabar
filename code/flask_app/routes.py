@@ -1,4 +1,6 @@
 """Application routes."""
+from . import advertisement_profile
+from . import user_profile
 from datetime import datetime as dt
 
 from flask import current_app as app
@@ -36,14 +38,22 @@ api = Api(app)
 
 # api.add_resource(Quote, "/ai-quotes", "/ai-quotes/", "/ai-quotes/<int:id>")
 
-from . import user_profile
-api.add_resource(user_profile.UserProfile, '/users', 
-                                            endpoint='/users', 
-                                            strict_slashes=False)
-# api.add_resource(user_profile.UserProfile, '/users/<user_id>', endpoint='/users/<user_id>')
+api.add_resource(user_profile.UserProfile,
+                 '/users',
+                 endpoint='/users',
+                 strict_slashes=False)
 
-from . import advertisement_profile
-api.add_resource(advertisement_profile.AdvertisementProfile, '/advertisements', 
-                                                                endpoint='/advertisements', 
-                                                                strict_slashes=False)
-# api.add_resource(advertisement_profile.AdvertisementProfile, '/advertisements/<advertisement_id>', endpoint='/advertisements/<advertisement_id>')
+api.add_resource(user_profile.UserProfile,
+                 '/users/<user_email>',
+                 endpoint='/users/<user_email>',
+                 strict_slashes=False)
+
+api.add_resource(advertisement_profile.AdvertisementProfile,
+                 '/advertisements',
+                 endpoint='/advertisements',
+                 strict_slashes=False)
+
+api.add_resource(advertisement_profile.AdvertisementProfile,
+                 '/advertisements/<user_email>',
+                 endpoint='/advertisements/<user_email>',
+                 strict_slashes=False)
