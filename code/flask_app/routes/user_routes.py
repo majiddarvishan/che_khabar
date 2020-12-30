@@ -5,7 +5,7 @@ from collections import OrderedDict
 from flask import current_app as app
 
 from flask_app import db
-from .models import user
+from flask_app.models import user
 
 @app.route("/users/<user_email>", methods=["GET"])
 def get_user_info(user_email : str):

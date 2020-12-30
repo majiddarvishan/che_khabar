@@ -3,7 +3,7 @@ from flask import request
 from flask import current_app as app
 
 from flask_app import db
-from .models import user, advertisement
+from flask_app.models import user, advertisement
 
 @app.route("/advertisements/<user_email>", methods=["GET"])
 def get_all_advetisements(user_email: str):

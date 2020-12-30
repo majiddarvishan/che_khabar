@@ -14,8 +14,8 @@ def create_app():
     db.init_app(app)
 
     with app.app_context():
-        from . import advertisement_profile
-        from . import user_profile
+        from .routes import advertisement_routes
+        from .routes import user_routes
 
         db.create_all()
 
