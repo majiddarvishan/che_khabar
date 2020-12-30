@@ -1,6 +1,6 @@
 """Initialize Flask app."""
 from flask import Flask
-from flask_restful import Resource, Api
+# from flask_restful import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -14,9 +14,10 @@ def create_app():
     db.init_app(app)
 
     with app.app_context():
-        from . import routes  
-        
-        db.create_all() 
+        from . import advertisement_profile
+        from . import user_profile
+
+        db.create_all()
 
     from . import my_json_encoder
     app.json_encoder = my_json_encoder.MyJSONEncoder
