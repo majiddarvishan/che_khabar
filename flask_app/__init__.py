@@ -1,11 +1,32 @@
-"""App entry point."""
-from flask_app import create_app
+"""Initialize Flask app."""
+from flask import Flask
+# from flask_restful import Resource, Api
+from flask_sqlalchemy import SQLAlchemy
 from flasgger import Swagger, swag_from
 
-app = create_app()
+db = SQLAlchemy()
 
-if __name__ == "__main__":
-    # Create an APISpec
+def create_app():
+    from os import environ, path
+    basedir = path.abspath(path.dirname(__file__))
+    print("dir: " + basedir)
+    """Construct the core application."""
+    app = Flask(__name__, instance_relative_config=False)
+    app.config.from_object("flask_app.config.Config")
+    # app.config['JSON_SORT_KEYS'] = False
+
+    db.init_app(app)
+
+    with app.app_context():
+        from .routes import advertisement_routes
+        from .routes import user_routes
+
+        db.create_all()
+
+    from . import my_json_encoder
+    app.json_encoder = my_json_encoder.MyJSONEncoder
+    
+        # Create an APISpec
     template = {
     "swagger": "2.0",
     "info": {
@@ -40,5 +61,6 @@ if __name__ == "__main__":
     }
 
     swagger = Swagger(app, template= template)
-    
-    app.run(host="0.0.0.0", port=5000, debug=True)
+
+
+    return app

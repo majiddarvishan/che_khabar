@@ -1,6 +1,7 @@
 code/__pycache__/
 code/venv/  
 data/
+data2/
 .vscode/
 test/__pycache__/
 
