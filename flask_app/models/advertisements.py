@@ -46,7 +46,6 @@ class Advertisement(db.Model):
         query_object["longitude"] = self.longitude
         query_object["start_time"] = self.start_time
         query_object["end_time"] = self.end_time
-        query_object["tags"] = self.tags
 
         return query_object
 

@@ -16,8 +16,8 @@ def create_app():
     db.init_app(app)
 
     with app.app_context():
-        from .routes import advertisement_routes
-        from .routes import user_routes
+        from .routes import advertisement_route
+        from .routes import user_route
         
         from .models import advertisement_tags
         from .models import advertisements
