@@ -1,15 +1,13 @@
+# https://hackersandslackers.com/flask-sqlalchemy-database-models/
+
 """Initialize Flask app."""
 from flask import Flask
-# from flask_restful import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
 from flasgger import Swagger, swag_from
 
 db = SQLAlchemy()
 
 def create_app():
-    from os import environ, path
-    basedir = path.abspath(path.dirname(__file__))
-    print("dir: " + basedir)
     """Construct the core application."""
     app = Flask(__name__, instance_relative_config=False)
     app.config.from_object("flask_app.config.Config")
@@ -20,13 +18,19 @@ def create_app():
     with app.app_context():
         from .routes import advertisement_routes
         from .routes import user_routes
+        
+        from .models import advertisement_tags
+        from .models import advertisements
+        from .models import user_tags
+        from .models import users
+        from .models import tags
 
         db.create_all()
 
     from . import my_json_encoder
     app.json_encoder = my_json_encoder.MyJSONEncoder
     
-        # Create an APISpec
+    # Create an APISpec
     template = {
     "swagger": "2.0",
     "info": {

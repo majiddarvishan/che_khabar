@@ -3,7 +3,7 @@ from flask import request
 from flask import current_app as app
 
 from flask_app import db
-from flask_app.models import user, advertisement
+from flask_app.models import users, advertisements, tags, advertisement_tags
 
 @app.route("/advertisements/<user_email>", methods=["GET"])
 def get_all_advetisements(user_email: str):
@@ -52,13 +52,13 @@ def get_all_advetisements(user_email: str):
           description: The sum of number
   """
 
-  usr = user.User.query.filter(
-      user.User.email == user_email
+  usr = users.User.query.filter(
+      users.User.email == user_email
   ).first()
 
   if(usr):
-      advs = advertisement.Advertisement.query.filter(
-          advertisement.Advertisement.user_id == usr.id
+      advs = advertisements.Advertisement.query.filter(
+          advertisements.Advertisement.user_id == usr.id
       ).all()
 
       l = list()
@@ -175,25 +175,40 @@ def add_new_advertisement():
       elif(k == "end_time"):
           end_time = time.strftime('%Y-%m-%d %H:%M:%S')
       elif(k == "tags"):
-          tags = v
+          recieved_tags = v
       else:
           print(f"{k}, {v}")
 
-  usr = user.User.query.filter(
-      user.User.email == email
+  usr = users.User.query.filter(
+      users.User.email == email
   ).first()
 
   if(usr):
-      new_adv = advertisement.Advertisement(user_id=usr.id,
+      new_adv = advertisements.Advertisement(user_id=usr.id,
                                             description=description,
                                             latitude=latitude,
                                             longitude=longitude,
                                             start_time=start_time,
-                                            end_time=end_time,
-                                            tags=tags
-                                            )
+                                            end_time=end_time)
       db.session.add(new_adv)
       db.session.commit()
+
+      tag_list = recieved_tags.split(",")
+      for tn in tag_list:
+        t = tags.Tag.query.filter(
+            tags.Tag.name == tn
+        ).first()
+        if(t):
+          tag_id = t.tag_id
+        else:
+          new_tag = tags.Tag(name=tn)
+          db.session.add(new_tag)
+          db.session.commit()
+          tag_id = new_tag.tag_id
+
+        new_adv_tag = advertisement_tags.AdvertisementTag(advertisement_id=new_adv.id, tag_id=tag_id)
+        db.session.add(new_adv_tag)
+        db.session.commit()
 
       result = jsonify("advertisement successfully created")
   else:

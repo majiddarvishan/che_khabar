@@ -16,7 +16,6 @@ class User(db.Model):
     created = db.Column(db.DateTime, index=False, unique=False, nullable=False)
     distance = db.Column(db.SmallInteger, index=False, unique=False, nullable=True)
     bio = db.Column(db.UnicodeText, index=False, unique=False, nullable=True)
-    tags = db.Column(db.Text, index=False, unique=False, nullable=True)
 
     def __repr__(self):
         return f"""firstname = {self.firstname},
@@ -35,13 +34,12 @@ class User(db.Model):
         #                     ("tags",  self.tags )])
 
         query_object = dict()
-        
+
         # query_object["user_id"] = self.user_id
         query_object["first_name"] = self.firstname
-        query_object["last_name"] = self.lastname 
-        query_object["email"] = self.email 
+        query_object["last_name"] = self.lastname
+        query_object["email"] = self.email
         query_object["mobile"] = self.mobile
         query_object["distance"] = self.distance
-        query_object["tags"] = self.tags 
 
         return query_object

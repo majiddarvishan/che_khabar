@@ -4,7 +4,7 @@ from flask_app import db
 from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, func
 from sqlalchemy.orm import relationship, backref
 
-from .user import User
+from .users import User
 
 class Advertisement(db.Model):
     """Data model for Advertisement."""
@@ -17,10 +17,9 @@ class Advertisement(db.Model):
     longitude = db.Column(db.FLOAT, index=False, nullable=False)
     start_time = db.Column(db.DateTime, default=func.now(), index=False, unique=False, nullable=True)
     end_time = db.Column(db.DateTime, index=False, unique=False, nullable=True)
-    tags = db.Column(db.Text, index=False, unique=False, nullable=True)
 
-     # Use cascade='delete,all' to propagate the deletion of a Department onto its Employees
-    users = relationship(
+    # Use cascade='delete,all' to propagate the deletion
+    user_f_key = relationship(
         User,
         backref=backref('users',
                          uselist=True,
