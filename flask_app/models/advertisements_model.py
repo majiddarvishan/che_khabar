@@ -4,7 +4,7 @@ from flask_app import db
 from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, func
 from sqlalchemy.orm import relationship, backref
 
-from .users import User
+from .users_model import User
 
 class Advertisement(db.Model):
     """Data model for Advertisement."""

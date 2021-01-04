@@ -5,7 +5,7 @@ from collections import OrderedDict
 from flask import current_app as app
 
 from flask_app import db
-from flask_app.models import users, tags, user_tags
+from flask_app.models import users_model, tags_model, user_tags_model
 
 @app.route("/users/<user_email>", methods=["GET"])
 def get_user_info(user_email : str):
@@ -39,8 +39,8 @@ def get_user_info(user_email : str):
             description: The sum of number
   """
   if user_email:
-      existing_user = users.User.query.filter(
-          users.User.email == user_email
+      existing_user = users_model.User.query.filter(
+          users_model.User.email == user_email
       ).first()
       if existing_user:
           resp = jsonify(existing_user.create_json())
@@ -74,15 +74,15 @@ def add_new_user():
           print(f"{k}, {v}")
 
   if email:
-    existing_user = users.User.query.filter(
-        users.User.email == email
+    existing_user = users_model.User.query.filter(
+        users_model.User.email == email
     ).first()
     if existing_user:
       result = jsonify("User with this email is already exist")
       result.status_code = 400
       return result
     else:
-      new_user = users.User(firstname=first_name,
+      new_user = users_model.User(firstname=first_name,
                       lastname=last_name,
                       email=email,
                       mobile=mobile,
@@ -96,18 +96,18 @@ def add_new_user():
 
       tag_list = recieved_tags.split(",")
       for tn in tag_list:
-        t = tags.Tag.query.filter(
-            tags.Tag.name == tn
+        t = tags_model.Tag.query.filter(
+            tags_model.Tag.name == tn
         ).first()
         if(t):
           tag_id = t.tag_id
         else:
-          new_tag = tags.Tag(name=tn)
+          new_tag = tags_model.Tag(name=tn)
           db.session.add(new_tag)
           db.session.commit()
           tag_id = new_tag.tag_id
 
-        new_user_tag = user_tags.UsertTag(user_id=new_user.id, tag_id=tag_id)
+        new_user_tag = user_tags_model.UsertTag(user_id=new_user.id, tag_id=tag_id)
         db.session.add(new_user_tag)
         db.session.commit()
 

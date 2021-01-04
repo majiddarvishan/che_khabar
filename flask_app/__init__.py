@@ -19,11 +19,11 @@ def create_app():
         from .routes import advertisement_route
         from .routes import user_route
         
-        from .models import advertisement_tags
-        from .models import advertisements
-        from .models import user_tags
-        from .models import users
-        from .models import tags
+        from .models import advertisement_tags_model
+        from .models import advertisements_model
+        from .models import user_tags_model
+        from .models import users_model
+        from .models import tags_model
 
         db.create_all()
 

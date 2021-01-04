@@ -2,8 +2,8 @@ from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, func
 from sqlalchemy.orm import relationship, backref
 
 from flask_app import db
-from .tags import Tag
-from .advertisements import Advertisement
+from .tags_model import Tag
+from .advertisements_model import Advertisement
 
 class AdvertisementTag(db.Model):
     """Data model for advertisement tags."""

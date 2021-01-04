@@ -2,8 +2,8 @@ from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, func
 from sqlalchemy.orm import relationship, backref
 
 from flask_app import db
-from .tags import Tag
-from .users import User
+from .tags_model import Tag
+from .users_model import User
 
 class UsertTag(db.Model):
     """Data model for user tags."""

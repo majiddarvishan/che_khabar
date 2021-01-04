@@ -3,7 +3,7 @@ from flask import request
 from flask import current_app as app
 
 from flask_app import db
-from flask_app.models import users, advertisements, tags, advertisement_tags
+from flask_app.models import users_model, advertisements_model, tags_model, advertisement_tags_model
 
 @app.route("/advertisements/<user_email>", methods=["GET"])
 def get_all_advetisements(user_email: str):
@@ -52,13 +52,13 @@ def get_all_advetisements(user_email: str):
           description: The sum of number
   """
 
-  usr = users.User.query.filter(
-      users.User.email == user_email
+  usr = users_model.User.query.filter(
+      users_model.User.email == user_email
   ).first()
 
   if(usr):
-      advs = advertisements.Advertisement.query.filter(
-          advertisements.Advertisement.user_id == usr.id
+      advs = advertisements_model.Advertisement.query.filter(
+          advertisements_model.Advertisement.user_id == usr.id
       ).all()
 
       l = list()
@@ -179,12 +179,12 @@ def add_new_advertisement():
       else:
           print(f"{k}, {v}")
 
-  usr = users.User.query.filter(
-      users.User.email == email
+  usr = users_model.User.query.filter(
+      users_model.User.email == email
   ).first()
 
   if(usr):
-      new_adv = advertisements.Advertisement(user_id=usr.id,
+      new_adv = advertisements_model.Advertisement(user_id=usr.id,
                                             description=description,
                                             latitude=latitude,
                                             longitude=longitude,
@@ -195,18 +195,18 @@ def add_new_advertisement():
 
       tag_list = recieved_tags.split(",")
       for tn in tag_list:
-        t = tags.Tag.query.filter(
-            tags.Tag.name == tn
+        t = tags_model.Tag.query.filter(
+            tags_model.Tag.name == tn
         ).first()
         if(t):
           tag_id = t.tag_id
         else:
-          new_tag = tags.Tag(name=tn)
+          new_tag = tags_model.Tag(name=tn)
           db.session.add(new_tag)
           db.session.commit()
           tag_id = new_tag.tag_id
 
-        new_adv_tag = advertisement_tags.AdvertisementTag(advertisement_id=new_adv.id, tag_id=tag_id)
+        new_adv_tag = advertisement_tags_model.AdvertisementTag(advertisement_id=new_adv.id, tag_id=tag_id)
         db.session.add(new_adv_tag)
         db.session.commit()
 
