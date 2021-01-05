@@ -10,7 +10,7 @@ from flask_app.models import users_model, tags_model, user_tags_model
 @app.route("/users/<user_email>", methods=["GET"])
 def get_user_info(user_email : str):
   """
-  get endpoint
+  get user information
   ---
   tags:
     - user
@@ -26,18 +26,25 @@ def get_user_info(user_email : str):
     200:
       description: return user's information
       schema:
-        id: stats
+        id: get_user_info
         properties:
-          sum:
+          first_name:
+            type: string
+            description: The first name of user
+          last_name:
+            type: string
+            description: The last name of user
+          email:
+            type: string
+            description: The email of user
+          mobile:
+            type: string
+            description: The mobile number of user
+          distance:
             type: integer
-            description: The sum of number
-          product:
-            type: integer
-            description: The sum of number
-          division:
-            type: integer
-            description: The sum of number
+            description: The expected distance of user
   """
+  
   if user_email:
       existing_user = users_model.User.query.filter(
           users_model.User.email == user_email
@@ -57,6 +64,48 @@ def get_user_info(user_email : str):
 
 @app.route("/users", methods=["POST"])
 def add_new_user():
+  """
+  add new user
+  ---
+  tags:
+    - user
+  parameters:
+    - name: first_name
+      in: body
+      type: string
+      required: true
+      description: first name of user
+    - name: last_name
+      in: body
+      type: string
+      required: true
+      description: last name of user
+    - name: email
+      in: body
+      type: string
+      required: true
+      description: email of user
+    - name: mobile
+      in: body
+      type: string
+      required: true
+      description: mobile number of user
+    - name: distance
+      in: body
+      type: integer
+      required: false
+      description: expected radius
+    - name: tags
+      in: body
+      type: string
+      required: false
+      description: favorite tags
+  responses:
+    400:
+      description: missing some parameters
+    200:
+      description: successfully add new user
+  """
   for k, v in request.json.items():
       if(k == "first_name"):
           first_name = v

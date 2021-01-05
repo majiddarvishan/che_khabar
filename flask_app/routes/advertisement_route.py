@@ -8,7 +8,7 @@ from flask_app.models import users_model, advertisements_model, tags_model, adve
 @app.route("/advertisements/<user_email>", methods=["GET"])
 def get_all_advetisements(user_email: str):
   """
-  get endpoint
+  get all advertisements of user
   ---
   tags:
   - advertisement
@@ -18,39 +18,34 @@ def get_all_advetisements(user_email: str):
     type: string
     required: true
     description: email of user
-  - name: lat
-    in: query
-    type: float
-    required: false
-    description: current latitude of user
-  - name: lng
-    in: query
-    type: float
-    required: false
-    description: current longitute of user
-  - name: distance
-    in: query
-    type: integer
-    required: false
-    description: user prefered distance
   responses:
     400:
-      description: missing some parameters
+      description: this user is not available
     200:
-      description: if latitude and longitude don't available, return user's information. otherwise return places according to user's location
+      description: get all advertisements of user
       schema:
-      id: stats
-      properties:
-        sum:
-          type: integer
-          description: The sum of number
-        product:
-          type: integer
-          description: The sum of number
-        division:
-          type: integer
-          description: The sum of number
-  """
+        id: get_all_user_advetisements
+        properties:
+          description:
+            type: string
+            description: The description of advertisement
+          latitude:
+            type: number
+            format: float
+            description: The latitude of advertisement
+          longitude:
+            type: number
+            format: float
+            description: The longitude of advertisement
+          start_time:
+            type: string
+            format: date-time
+            description: The start time of advertisement
+          end_time:
+            type: string
+            format: date-time
+            description: The end time of advertisement
+    """
 
   usr = users_model.User.query.filter(
       users_model.User.email == user_email
@@ -76,16 +71,11 @@ def get_all_advetisements(user_email: str):
 @app.route("/advertisements", methods=["GET"])
 def get_Advertisements_by_location():
   """
-  get endpoint
+  get advertisements according to user location
   ---
   tags:
   - advertisement
   parameters:
-  - name: email
-    in: path
-    type: string
-    required: true
-    description: email of user
   - name: lat
     in: query
     type: float
@@ -107,18 +97,24 @@ def get_Advertisements_by_location():
     200:
       description: if latitude and longitude don't available, return user's information. otherwise return places according to user's location
       schema:
-      id: stats
-      properties:
-        sum:
-          type: integer
-          description: The sum of number
-        product:
-          type: integer
-          description: The sum of number
-        division:
-          type: integer
-          description: The sum of number
+        id: get_adv_by_loc
+        properties:
+          description:
+            type: string
+            description: The description of advertisement
+          distance:
+            type: integer
+            description: The distance between advertisement and user's current location
+          latitude:
+            type: number
+            format: float
+            description: The latitude of advertisement
+          longitude:
+            type: number
+            format: float
+            description: The longitude of advertisement
   """
+        
   lat = request.args.get('lat')
   lng = request.args.get('lng')
   distance = request.args.get('distance')
@@ -132,7 +128,6 @@ def get_Advertisements_by_location():
             description,
             latitude,
             longitude,
-            tags,
             Convert((6371 *
             acos(
                 cos (radians({lat})) * cos(radians(latitude)) * cos(radians(longitude) - radians({lng})) +
@@ -159,6 +154,60 @@ def get_Advertisements_by_location():
 
 @app.route("/advertisements", methods=["POST"])
 def add_new_advertisement():
+  """
+  add new advertisement
+  ---
+  tags:
+    - advertisement
+  parameters:
+    - name: description
+      in: body
+      type: string
+      required: true
+      description: description of advertisement
+      
+    - name: email
+      in: body
+      type: email
+      required: true
+      description: email address of user
+    
+    - name: latitude
+      in: body
+      type: float
+      required: true
+      description: latitude of advertisement
+      
+    - name: longitude
+      in: body
+      type: float
+      required: true
+      description: longitute of advertisement
+      
+    - name: start_time
+      in: body
+      type: string
+      required: false
+      description: start time of advertisement
+      
+    - name: end_time
+      in: body
+      type: string
+      required: false
+      description: end time of advertisement
+      
+    - name: tags
+      in: body
+      type: string
+      required: false
+      description: tag list of advertisement
+  responses:
+    400:
+      description: missing some parameters
+    200:
+      description: successfully add new advertisement
+  """
+  
   import time
 
   for k, v in request.json.items():

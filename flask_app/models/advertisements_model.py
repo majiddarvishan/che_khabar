@@ -39,8 +39,8 @@ class Advertisement(db.Model):
     def create_json(self):
         query_object = dict()
         
-        query_object["id"] = self.id
-        query_object["user_id"] = self.user_id
+        # query_object["id"] = self.id
+        # query_object["user_id"] = self.user_id
         query_object["description"] = self.description
         query_object["latitude"] = self.latitude
         query_object["longitude"] = self.longitude
