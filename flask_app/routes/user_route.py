@@ -6,6 +6,40 @@ from flask import current_app as app
 
 from flask_app import db
 from flask_app.models import users_model, tags_model, user_tags_model
+from flask_expects_json import expects_json
+
+post_user_schema = {
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
+    },
+    "first_name": {
+      "type": "string"
+    },
+    "last_name": {
+      "type": "string"
+    },
+    "mobile": {
+      "type": "string",
+      "pattern": "^(09)(\d{9})$"
+    },
+    "distance": {
+      "type": "integer"
+    },
+    "tags": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "email",
+    "first_name",
+    "last_name",
+    "mobile"
+  ]
+}
+
 
 @app.route("/users/<user_email>", methods=["GET"])
 def get_user_info(user_email : str):
@@ -61,8 +95,8 @@ def get_user_info(user_email : str):
 
   return resp
 
-
 @app.route("/users", methods=["POST"])
+@expects_json(post_user_schema)
 def add_new_user():
   """
   add new user

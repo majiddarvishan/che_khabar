@@ -1,9 +1,46 @@
+# https://medium.com/analytics-vidhya/server-validation-in-flask-api-with-json-schema-963aa05e305f
+
 from flask_jsonpify import jsonify
 from flask import request
 from flask import current_app as app
 
 from flask_app import db
 from flask_app.models import users_model, advertisements_model, tags_model, advertisement_tags_model
+from flask_expects_json import expects_json
+
+post_adv_schema = {
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
+    },
+    "description": {
+      "type": "string"
+    },
+    "latitude": {
+      "type": "number"
+    },
+    "longitude": {
+      "type": "number"
+    },
+    "start_time": {
+      "type": "string"
+    },
+    "end_time": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "email",
+    "description",
+    "latitude",
+    "longitude"
+  ]
+}
 
 @app.route("/advertisements/<user_email>", methods=["GET"])
 def get_all_advetisements(user_email: str):
@@ -153,6 +190,7 @@ def get_Advertisements_by_location():
   return result
 
 @app.route("/advertisements", methods=["POST"])
+@expects_json(post_adv_schema)
 def add_new_advertisement():
   """
   add new advertisement
