@@ -5,13 +5,30 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flasgger import Swagger, swag_from
 
+from flask_login import (
+    LoginManager,
+    current_user,
+    login_required,
+    login_user,
+    logout_user,
+)
+from oauthlib.oauth2 import WebApplicationClient
+
 db = SQLAlchemy()
+login_manager = LoginManager()
 
 def create_app():
     """Construct the core application."""
     app = Flask(__name__, instance_relative_config=False)
     app.config.from_object("flask_app.config.Config")
     # app.config['JSON_SORT_KEYS'] = False
+    
+    if not app.config['GOOGLE_CLIENT_ID'] or not app.config['GOOGLE_CLIENT_SECRET']:
+        raise RuntimeError('Environment not set up, see "Running":\n' + __doc__)
+    
+    # User session management setup
+    # https://flask-login.readthedocs.io/en/latest
+    login_manager.init_app(app)
 
     db.init_app(app)
 
@@ -26,6 +43,9 @@ def create_app():
         from .models import tags_model
 
         db.create_all()
+        
+    # OAuth 2 client setup
+    oauth_client = WebApplicationClient(app.config['GOOGLE_CLIENT_ID'])
 
     from . import my_json_encoder
     app.json_encoder = my_json_encoder.MyJSONEncoder

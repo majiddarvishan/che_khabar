@@ -8,6 +8,14 @@ from flask_app import db
 from flask_app.models import users_model, tags_model, user_tags_model
 from flask_expects_json import expects_json
 
+from flask_login import (
+    LoginManager,
+    current_user,
+    login_required,
+    login_user,
+    logout_user,
+)
+
 post_user_schema = {
   "type": "object",
   "properties": {
@@ -78,6 +86,15 @@ def get_user_info(user_email : str):
             type: integer
             description: The expected distance of user
   """
+  
+  if not current_user.is_authenticated:
+    resp = jsonify("You're not logged in!")
+    resp.status_code = 403
+    return resp
+    # response = make_response(json.dumps('Invalid state parameter.'), 401)
+    # response.headers['Content-Type'] = 'application/json'
+    # return response
+
   
   if user_email:
       existing_user = users_model.User.query.filter(

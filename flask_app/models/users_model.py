@@ -3,6 +3,7 @@ from flask_app import db
 
 from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, func
 from sqlalchemy.orm import relationship, backref
+import datetime
 
 class User(db.Model):
     """Data model for user accounts."""
@@ -13,7 +14,9 @@ class User(db.Model):
     lastname = db.Column(db.String(64), index=False, nullable=False)
     email = db.Column(db.String(80), index=True, unique=True, nullable=False)
     mobile = db.Column(db.Numeric(20), index=True, unique=True, nullable=False)
-    created = db.Column(db.DateTime, index=False, unique=False, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow(), index=False, unique=False, nullable=False)
+    active = db.Column(db.Boolean, default=False)
+    tokens = db.Column(db.Text)
     distance = db.Column(db.SmallInteger, index=False, unique=False, nullable=True)
     bio = db.Column(db.UnicodeText, index=False, unique=False, nullable=True)
 
