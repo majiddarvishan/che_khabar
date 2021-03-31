@@ -40,23 +40,63 @@ post_user_schema = {
   ]
 }
 
+@app.route("/users/<mobile>", methods=["HEAD"])
+def check_user_existing(mobile : str):
+  """
+  check user existing
+  ---
+  tags:
+    - user
+  parameters:
+    - name: mobile
+      in: query
+      type: string
+      required: true
+      description: mobile number of user
+  responses:
+    200:
+      description: user already exist
+    404:
+      description: user does not exist
+    400:
+      description: bad request
+    
+  """
+  
+  if mobile:
+      existing_user = users_model.User.query.filter(
+          users_model.User.mobile == mobile
+      ).first()
+      if existing_user:
+          resp = jsonify(existing_user.create_json())
+          resp.status_code = 200
+      else:
+        resp = jsonify("user with this mobile number is not available")
+        resp.status_code = 404
+  else:
+    resp = jsonify("please input mobile number")
+    resp.status_code = 400
 
-@app.route("/users/<user_email>", methods=["GET"])
-def get_user_info(user_email : str):
+  return resp
+
+@app.route("/users/<mobile>", methods=["GET"])
+def get_user_info(mobile : str):
   """
   get user information
   ---
   tags:
     - user
   parameters:
-    - name: email
+    - name: mobile
       in: query
       type: string
       required: true
-      description: email of user
+      description: mobile number of user
   responses:
     400:
       description: missing some parameters
+    404:
+      description: user does not exist
     200:
       description: return user's information
       schema:
@@ -79,24 +119,24 @@ def get_user_info(user_email : str):
             description: The expected distance of user
   """
   
-  if user_email:
+  if mobile:
       existing_user = users_model.User.query.filter(
-          users_model.User.email == user_email
+          users_model.User.mobile == mobile
       ).first()
       if existing_user:
           resp = jsonify(existing_user.create_json())
           resp.status_code = 200
       else:
-        resp = jsonify("user with this email is not available")
-        resp.status_code = 400
+        resp = jsonify("user with this mobile number is not available")
+        resp.status_code = 404
   else:
-    resp = jsonify("please input email")
+    resp = jsonify("please input mobile number")
     resp.status_code = 400
 
   return resp
 
 @app.route("/users", methods=["POST"])
-@expects_json(post_user_schema)
+# @expects_json(post_user_schema)
 def add_new_user():
   """
   add new user
@@ -140,6 +180,9 @@ def add_new_user():
     200:
       description: successfully add new user
   """
+  
+  distance  = 1000
+  recieved_tags = ""
   for k, v in request.json.items():
       if(k == "first_name"):
           first_name = v
@@ -156,9 +199,9 @@ def add_new_user():
       else:
           print(f"{k}, {v}")
 
-  if email:
+  if mobile:
     existing_user = users_model.User.query.filter(
-        users_model.User.email == email
+        users_model.User.mobile == mobile
     ).first()
     if existing_user:
       result = jsonify("User with this email is already exist")
@@ -166,14 +209,18 @@ def add_new_user():
       return result
     else:
       new_user = users_model.User(firstname=first_name,
-                      lastname=last_name,
-                      email=email,
-                      mobile=mobile,
-                      created=datetime.now(),
-                      distance=distance,
-                      bio="In West Philadelphia born and raised, \
-                      on the playground is where I spent most of my days"
-                      )
+                                  lastname=last_name,
+                                  nickname=first_name,
+                                  email=email,
+                                  mobile=mobile,
+                                  created_at=datetime.now(),
+                                  active=True,
+                                  score=0,
+                                  visible=True,
+                                  distance=distance,
+                                  user_mode=users_model.UserMode.Common,
+                                  bio="In West Philadelphia born and raised, \
+                                  on the playground is where I spent most of my days")
       db.session.add(new_user)
       db.session.commit()
 

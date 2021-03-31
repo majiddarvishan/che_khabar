@@ -24,6 +24,8 @@ def create_app():
         from .models import user_tags_model
         from .models import users_model
         from .models import tags_model
+        from .models import following_users_model
+        from .models import following_advertisements_model
 
         db.create_all()
 

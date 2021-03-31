@@ -11,9 +11,9 @@ from flask_expects_json import expects_json
 post_adv_schema = {
   "type": "object",
   "properties": {
-    "email": {
+    "mobile": {
       "type": "string",
-      "pattern": "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
+      "pattern": "^(09)(\d{9})$"
     },
     "description": {
       "type": "string"
@@ -35,26 +35,26 @@ post_adv_schema = {
     }
   },
   "required": [
-    "email",
+    "mobile",
     "description",
     "latitude",
     "longitude"
   ]
 }
 
-@app.route("/advertisements/<user_email>", methods=["GET"])
-def get_all_advetisements(user_email: str):
+@app.route("/advertisements/<mobile>", methods=["GET"])
+def get_all_advetisements(mobile: str):
   """
   get all advertisements of user
   ---
   tags:
   - advertisement
   parameters:
-  - name: email
+  - name: mobile
     in: path
     type: string
     required: true
-    description: email of user
+    description: mobile number of user
   responses:
     400:
       description: this user is not available
@@ -85,7 +85,7 @@ def get_all_advetisements(user_email: str):
     """
 
   usr = users_model.User.query.filter(
-      users_model.User.email == user_email
+      users_model.User.mobile == mobile
   ).first()
 
   if(usr):
@@ -204,11 +204,11 @@ def add_new_advertisement():
       required: true
       description: description of advertisement
       
-    - name: email
+    - name: mobile
       in: body
-      type: email
+      type: number
       required: true
-      description: email address of user
+      description: mobile number of user
     
     - name: latitude
       in: body
@@ -249,8 +249,8 @@ def add_new_advertisement():
   import time
 
   for k, v in request.json.items():
-      if(k == "email"):
-          email = v
+      if(k == "mobile"):
+          mobile = v
       elif(k == "description"):
           description = v
       elif(k == "latitude"):
@@ -266,8 +266,9 @@ def add_new_advertisement():
       else:
           print(f"{k}, {v}")
 
+  print(f"mobile: {mobile}")
   usr = users_model.User.query.filter(
-      users_model.User.email == email
+      users_model.User.mobile == mobile
   ).first()
 
   if(usr):
@@ -299,7 +300,7 @@ def add_new_advertisement():
 
       result = jsonify("advertisement successfully created")
   else:
-      result = jsonify("User with this email is not available")
+      result = jsonify("User with this mobile number is not available")
       result.status_code = 400
 
   return result
